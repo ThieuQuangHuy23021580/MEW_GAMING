@@ -133,10 +133,14 @@
     <ClCompile Include="BaseObject.cpp" />
     <ClCompile Include="Common_Function.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainObject.cpp" />
+    <ClCompile Include="Song1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseObject.h" />
     <ClInclude Include="Common_Function.h" />
+    <ClInclude Include="MainObject.h" />
+    <ClInclude Include="Song1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

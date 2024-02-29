@@ -5,6 +5,7 @@ BaseObject::BaseObject()
 {
 	rect_.x = 0;
 	rect_.y = 0;
+	
 	objectTexture = NULL;
 }
 
@@ -15,7 +16,7 @@ BaseObject::~BaseObject()
 	}
 }
 
-bool BaseObject::loadImage(const char* file_name)
+bool BaseObject::loadImage(const char* file_name,SDL_Renderer* renderer)
 {
 	objectTexture = SDLCommonFunc::loadTexture(file_name,renderer);
 	if (objectTexture == NULL) {
@@ -25,8 +26,11 @@ bool BaseObject::loadImage(const char* file_name)
 	return true;
 }
 
-void BaseObject::showObject() {
-	if (objectTexture != NULL) {
-		SDLCommonFunc::renderTexture(objectTexture,renderer, rect_.x , rect_.y);
+void BaseObject::showObject(SDL_Renderer* renderer,bool is_animation) {
+	if (objectTexture != NULL&&!is_animation) {
+		SDLCommonFunc::renderTexture(objectTexture,renderer, rect_.x , rect_.y, rect_.w, rect_.h);
+	}
+	else if (objectTexture != NULL && is_animation) {
+		SDLCommonFunc::renderTexture(objectTexture, renderer, rect_.x, rect_.y, rect_.w, rect_.h,srcrect);
 	}
 }

@@ -10,18 +10,32 @@ SDL_Texture* SDLCommonFunc::loadTexture(std::string file_path,SDL_Renderer* rend
 	}
 	SDL_Texture* texture = NULL;
 	texture = SDL_CreateTextureFromSurface(renderer, load_image);
-	if (texture == NULL) std::cerr << "LoadTexture is wrong!" << SDL_GetError() << std::endl;
+	if (texture == NULL) 
+		std::cerr << "LoadTexture is wrong!" << SDL_GetError() << std::endl;
 	//SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	//SDL_SetTextureColorMod(texture, 0, 255, 255);
 	SDL_FreeSurface(load_image);
 	return texture;
 }
-void SDLCommonFunc::renderTexture(SDL_Texture* texture,SDL_Renderer* renderer, int x, int y)
+void SDLCommonFunc::renderTexture(SDL_Texture* texture,SDL_Renderer* renderer, int x, int y,int w, int h)
 {
-	SDL_Rect offset;
+	SDL_Rect offset{};
 	offset.x = x;
 	offset.y = y;
+	offset.w = w;
+	offset.h = h;
 	SDL_RenderCopy(renderer, texture,NULL, &offset);
+}
+
+void SDLCommonFunc::renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h, SDL_Rect& srcrect)
+{
+	SDL_Rect offset{};
+	offset.x = x;
+	offset.y = y;
+	offset.w = w;
+	offset.h = h;
+
+	SDL_RenderCopy(renderer, texture, &srcrect , &offset);
 }
 void SDLCommonFunc::close()
 {
