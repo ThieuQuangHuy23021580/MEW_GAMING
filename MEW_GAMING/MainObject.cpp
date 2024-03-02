@@ -24,11 +24,11 @@ void MainObject::HandleInputAction(SDL_Event events)
 		{
 		case SDLK_LEFT:
 			if(rect_.x>0)
-			rect_.x -= WIDTH_MAIN / 5;
+			rect_.x -= WIDTH_MAIN / 4;
 			break;
 		case SDLK_RIGHT:
 			if((rect_.x+WIDTH_MAIN)<SCREEN_WIDTH)
-			rect_.x += WIDTH_MAIN / 5;
+			rect_.x += WIDTH_MAIN / 4;
 			break;
 		}
 	}

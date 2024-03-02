@@ -7,16 +7,17 @@
 #include<string>
 #include<SDL_image.h>
 #include<SDL_ttf.h>
+#include<SDL_mixer.h>
 
 
-const int SCREEN_WIDTH = 500;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 529;
+const int SCREEN_HEIGHT = 748;
 
 static SDL_Window* gWindow = NULL;
 static SDL_Renderer* renderer = NULL;
 static SDL_Event g_even;
 
- 
+
 
 namespace SDLCommonFunc
 {

@@ -1,13 +1,14 @@
 
 //#include"Common_Function.h"
-#include<chrono>
-#include<thread>
+
 #include"MainObject.h"
 #include"Song1.h"
+#include<cmath>
 
+bool call_bg = false;
 bool song1_played = false;
-
-
+bool song2_played = false;
+bool song3_played = false;
 
 
 bool init()
@@ -34,10 +35,16 @@ bool init()
 	}
 	return success;
 }
+bool playMusic() {
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		std::cout << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
+		return 1;
+	}
+}
 void ChooseSong() {
 	song1_played = false;
 	bool song_clicked = false;
-	while (!song_clicked)
+	while (!song_clicked&&!call_bg)
 	{
 		while (SDL_PollEvent(&g_even) != NULL)
 		{
@@ -45,15 +52,35 @@ void ChooseSong() {
 			{
 				int mouseX_song, mouseY_song;
 				SDL_GetMouseState(&mouseX_song, &mouseY_song);
-				if (mouseY_song > 300 && mouseY_song < 400)
+				if (mouseY_song > 310 && mouseY_song < 430)
 				{
 					SDL_RenderClear(renderer);
-					Song1::Song1_BG(renderer);
+					//Song1::Song1_BG(renderer);
 					song1_played = true;
 					song_clicked = true;
+					call_bg = true;
 				}
-				else if (mouseY_song > 400 && mouseY_song < 500) {}
-				else if (mouseY_song > 500 && mouseY_song < 600) {}
+				else if (mouseY_song > 460 && mouseY_song < 560)
+				{
+					SDL_RenderClear(renderer);
+					//Song1::Song1_BG(renderer);
+					song2_played = true;
+					song_clicked = true;
+					call_bg = true;
+				}
+				else if (mouseY_song > 590 && mouseY_song < 700) 
+				{
+					SDL_RenderClear(renderer);
+					//Song1::Song1_BG(renderer);
+					song3_played = true;
+					song_clicked = true;
+					call_bg = true;
+				}
+				else if (mouseY_song < 100&&mouseY_song>0 && mouseX_song < 100&&mouseX_song >0)
+				{
+					call_bg = false;
+					song_clicked = true;
+				}
 			}
 		}
 	}
@@ -63,7 +90,7 @@ void CallBG()
 {   
 	bool clicked = false;
 	SDL_Texture* background = NULL;
-	background = SDLCommonFunc::loadTexture("OPEN_BACKGROUND.png", renderer);
+	background = SDLCommonFunc::loadTexture("openBackground.png", renderer);
 	if (background == NULL) 
 		std::cerr << "BG error: " << SDL_GetError() << std::endl;
 	else SDL_RenderCopy(renderer, background, NULL, NULL);
@@ -79,9 +106,9 @@ void CallBG()
 				SDL_GetMouseState(&mouseX, &mouseY);
 				if (mouseX > 200 && mouseX < 300 && mouseY>550 && mouseY < 650)
 				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(700));
+					SDL_Delay(700);
 					SDL_RenderClear(renderer);
-					background = SDLCommonFunc::loadTexture("PLAYLIST_BACKGROUND.png", renderer);
+					background = SDLCommonFunc::loadTexture("PLAYLIST_BG.png", renderer);
 					SDL_RenderCopy(renderer, background, NULL, NULL);
 					SDL_RenderPresent(renderer);
 					
@@ -96,6 +123,17 @@ void CallBG()
 	}
 	
 }
+void SongNote(Meow cat[]) {
+  
+	
+	cat[0].HandleMove();
+	cat[0].showObject(renderer, 0);
+	
+	cat[1].HandleMove();
+	cat[1].showObject(renderer, 0);
+	
+
+}
 
 
 
@@ -105,26 +143,52 @@ int main(int argc, char* args[]) {
 	{
 		std::cerr << "Can not open the window!" <<SDL_GetError()<< std::endl; return 0;
 	}
-	CallBG();
+	while (call_bg == false) {
+		CallBG();
+		//call_bg = true;
+	}
+	
 	//MAIN CHARACTER CALL:
 	MainObject character;
 	if (!character.loadImage("CHARACTER.png",renderer))
 		std::cerr << " CHARACTER can not load! " << SDL_GetError() << std::endl;
 	else
 	{
-		character.showObject(renderer,0);
+		character.SetSrcrect(32, 0, 32, 64);
+		character.showObject(renderer, 1);
 		SDL_Texture* test_objectTexture = character.GetObject();
 		if (test_objectTexture == NULL)
 			std::cout << "ObjectTexture failed!" << std::endl;
-			SDL_RenderPresent(renderer);
-			
-
+		SDL_RenderPresent(renderer);
 	}
+	//FALL CAT:
+	 Meow cat[2];	
+	 
+	 
+	 for (int i = 0; i < 2; i++) {
+		 if (!cat[i].loadImage("CAT.jpg", renderer))
+			 std::cerr << " CAT can not load! " << SDL_GetError() << std::endl;
+		 else
+		 {
+
+			 cat[i].showObject(renderer, 0);
+			 SDL_Texture* test_catTexture = cat[i].GetObject();
+			 if (test_catTexture == NULL)
+				 std::cout << "CatTexture failed!" << std::endl;
+			 SDL_RenderPresent(renderer);
+		 }
+	 }
+	 cat[0].SetRect(cat[0].GetRect().x, 0);
+	 cat[1].SetRect(cat[1].GetRect().x, -200);
+	//Load Song BACKGROUND:
+	SDL_Texture* song1_bg = SDLCommonFunc::loadTexture("song1bg.png", renderer);
+	SDL_Texture* song2_bg = SDLCommonFunc::loadTexture("song2bg.png", renderer);
+	SDL_Texture* song3_bg = SDLCommonFunc::loadTexture("song3bg.png", renderer);
 	
 	while (!is_quit)
 		{
 		    Uint32 ticks = SDL_GetTicks();
-		    Uint32 sprite = (ticks / 100) % 4;
+		    Uint32 sprite = (ticks / 200) % 4;
 			bool un_move = true;
 			while (SDL_PollEvent(&g_even))
 			{
@@ -139,21 +203,29 @@ int main(int argc, char* args[]) {
 
 					character.HandleInputAction(g_even);
 					un_move = false;
+					if (un_move) character.SetSrcrect(32, 0, 32, 64);
+					else character.SetSrcrect(sprite * 32, 0, 32, 64);
 
 
 				}
-				else /*if (g_even.type == SDL_KEYUP && (g_even.key.keysym.sym == SDLK_RIGHT || g_even.key.keysym.sym == SDLK_LEFT))*/
+				else 
 					un_move = true;
 			}
+			//SDL_Delay(3);
 			SDL_RenderClear(renderer);
-			if(song1_played==true) SDL_RenderCopy(renderer, SDLCommonFunc::loadTexture("SONG1.png", renderer), NULL, NULL);
-			if(un_move) character.SetSrcrect( 32, 0, 32, 64);
-				
-			else character.SetSrcrect(sprite * 32, 0, 32, 64);
-				
+			if (song1_played == true) SDL_RenderCopy(renderer, song1_bg, NULL, NULL);
+			else if (song2_played == true) SDL_RenderCopy(renderer, song2_bg, NULL, NULL);
+			else if (song3_played == true) SDL_RenderCopy(renderer, song3_bg, NULL, NULL);
+
+			SongNote(cat);
+			
+			
+			
+			
 			character.showObject(renderer, 1);
 			
 			SDL_RenderPresent(renderer);
+		
     }
 	SDLCommonFunc::close();
 	return 0;
