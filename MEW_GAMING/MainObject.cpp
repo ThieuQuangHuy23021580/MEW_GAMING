@@ -3,9 +3,9 @@
 MainObject::MainObject()
 {
 	rect_.x = 180;
-	rect_.y = 400;
-	rect_.w = WIDTH_MAIN;
-	rect_.h = HEIGHT_MAIN;
+	rect_.y = 500;
+	rect_.w = WIDTH_MAIN/1.2;
+	rect_.h = HEIGHT_MAIN/1.2;
 
 	objectTexture = NULL;
 	
@@ -24,11 +24,11 @@ void MainObject::HandleInputAction(SDL_Event events)
 		{
 		case SDLK_LEFT:
 			if(rect_.x>0)
-			rect_.x -= WIDTH_MAIN /25;
+			rect_.x -= WIDTH_MAIN /27;
 			break;
 		case SDLK_RIGHT:
 			if((rect_.x+WIDTH_MAIN)<SCREEN_WIDTH)
-			rect_.x += WIDTH_MAIN / 25;
+			rect_.x += WIDTH_MAIN / 27;
 			break;
 		}
 	}
