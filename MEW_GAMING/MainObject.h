@@ -2,8 +2,8 @@
 #define MAINOBJECT_H_
 #include"BaseObject.h"
 
-const int WIDTH_MAIN = 32;
-const int HEIGHT_MAIN = 64;
+const int WIDTH_MAIN = 142;
+const int HEIGHT_MAIN = 288;
 
 class MainObject : public BaseObject
 {

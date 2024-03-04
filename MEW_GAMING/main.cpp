@@ -150,11 +150,11 @@ int main(int argc, char* args[]) {
 	
 	//MAIN CHARACTER CALL:
 	MainObject character;
-	if (!character.loadImage("CHARACTER.png",renderer))
+	if (!character.loadImage("WALK_BG_FULL1.png",renderer))
 		std::cerr << " CHARACTER can not load! " << SDL_GetError() << std::endl;
 	else
 	{
-		character.SetSrcrect(32, 0, 32, 64);
+		character.SetSrcrect(1136, 0, 142, 288);
 		character.showObject(renderer, 1);
 		SDL_Texture* test_objectTexture = character.GetObject();
 		if (test_objectTexture == NULL)
@@ -185,10 +185,12 @@ int main(int argc, char* args[]) {
 	SDL_Texture* song2_bg = SDLCommonFunc::loadTexture("song2bg.png", renderer);
 	SDL_Texture* song3_bg = SDLCommonFunc::loadTexture("song3bg.png", renderer);
 	
+	int sprite_plus[16] = { 0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16 };
+	int i = 0, j = 45, i_ = 0,j_=45;
 	while (!is_quit)
 		{
 		    Uint32 ticks = SDL_GetTicks();
-		    Uint32 sprite = (ticks / 200) % 4;
+		    Uint32 sprite = (ticks / 200) % 17;
 			bool un_move = true;
 			while (SDL_PollEvent(&g_even))
 			{
@@ -203,12 +205,36 @@ int main(int argc, char* args[]) {
 
 					character.HandleInputAction(g_even);
 					un_move = false;
-					if (un_move) character.SetSrcrect(32, 0, 32, 64);
-					else character.SetSrcrect(sprite * 32, 0, 32, 64);
-
-
+					if (un_move) character.SetSrcrect(1136, 0, 142, 288);
+					else if (g_even.key.keysym.sym == SDLK_LEFT/*&& sprite%17!=0 && sprite%17 != 1 && sprite %17!= 2 && sprite%17 != 3 && sprite % 17 != 4 && sprite % 17 != 5 && sprite % 17 != 6 && sprite % 17 != 7 && sprite % 17 != 8*/)
+					{
+						
+						if (i == 35) i = 0;
+						if (i % 5 == 0) {
+							character.SetSrcrect(sprite_plus[i_/5] * 142, 0, 142, 288);
+							i_ = i;
+						}
+					/*	else {
+							character.SetSrcrect(sprite_plus[i_] * 142, 0, 142, 288);
+						}*/
+						
+						i++;
+						
+					}
+					else if (g_even.key.keysym.sym == SDLK_RIGHT /*&& sprite % 17 != 8 && sprite % 17 != 9 && sprite % 17 != 10 && sprite % 17 != 11 && sprite % 17 != 12 && sprite % 17 != 13 && sprite % 17 != 14 && sprite % 17 != 15 && sprite % 17 != 16*/)
+					{
+						
+						if (j == 80) j = 45;
+						if (j % 5 == 0) {
+							character.SetSrcrect(sprite_plus[j_/5] * 142, 0, 142, 288);
+							j_ = j;
+						}
+						//else character.SetSrcrect(sprite_plus[j_] * 142, 0, 142, 288);
+						j++;
+					}
 				}
 				else 
+					character.SetSrcrect(1136, 0, 142, 288);
 					un_move = true;
 			}
 			//SDL_Delay(3);
