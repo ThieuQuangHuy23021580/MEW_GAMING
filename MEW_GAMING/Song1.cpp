@@ -6,8 +6,6 @@ Meow::Meow()
 	rect_.y = -30;
 	rect_.w = WIDTH_MEOW;
 	rect_.h = HEIGHT_MEOW;
-	x_val_ = 0;
-	y_val_ = 0;
 	is_move = true;
 	is_lose = false;
 	drop_effect = false;
@@ -33,11 +31,18 @@ void Meow::HandleMove( )
 	SDL_Delay(3);
 
 	if (is_move == true) {
-		if (rect_.y < SCREEN_HEIGHT - 200) {
+		if (rect_.y < SCREEN_HEIGHT - 200&&is_lose==false) {
 			
 
 			rect_.y += 1;
 			
+		}
+		else if (is_lose == true) {
+			rect_.y = 0;
+			rect_.x = rand() % 480;
+			if (rect_.x < 0 && rect_.x>450)
+				rect_.x = 100;
+			is_lose = false;
 		}
 		else {
 			rect_.y = 0;

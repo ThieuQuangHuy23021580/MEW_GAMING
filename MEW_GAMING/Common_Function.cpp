@@ -43,3 +43,11 @@ void SDLCommonFunc::close()
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 }
+bool is_Interact(SDL_Rect character, const int width_char, const int height_char, SDL_Rect cat,const int width_cat,const int height_cat)
+{   
+	int bottom_x = cat.x + width_cat / 2;
+	if (character.x < bottom_x && character.x + width_char >bottom_x && character.y - height_char == cat.y)
+		return true;
+	return false;
+
+}

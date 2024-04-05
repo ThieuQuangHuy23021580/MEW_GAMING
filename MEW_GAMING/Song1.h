@@ -2,8 +2,8 @@
 #define SONG1_H_
 #include "BaseObject.h" 
 
-#define WIDTH_MEOW 60
-#define HEIGHT_MEOW 57
+const int WIDTH_MEOW = 60;
+const int HEIGHT_MEOW = 57;
 
 namespace Song1
 {
@@ -17,10 +17,11 @@ public:
 	void HandleMove( );
 	bool GetMove() { return is_move;}
 	bool SetMove(bool set) { is_move = set; }
-	
+	void SetLose(bool lose) { is_lose = lose; }
+	bool GetLose() { return is_lose; }
 protected:
-	int x_val_;
-	int y_val_;
+	/*int x_val_;
+	int y_val_;*/
 	bool is_move = false;
 	bool is_lose = false;
 	bool drop_effect = true;
