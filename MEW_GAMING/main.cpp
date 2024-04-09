@@ -5,11 +5,13 @@
 #include"Song1.h"
 #include<cmath>
 #include"PlayMusic.h"
+#include<thread>
 
 bool call_bg = false;
 bool song1_played = false;
 bool song2_played = false;
 bool song3_played = false;
+Graphics graphics;
 
 
 
@@ -54,6 +56,8 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 	
 	song1_played = false;
 	bool song_clicked = false;
+	Mix_Chunk* gChunk = graphics.loadSound("CLICK_SOUND.wav");
+	if (gChunk == NULL) std::cerr << "Sound Error" << SDL_GetError() << std::endl;
 	while (!song_clicked&&!call_bg)
 	{   
 		SDL_RenderClear(renderer);
@@ -65,7 +69,9 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 		SDL_RenderPresent(renderer);
 		//SDL_DestroyTexture(Fake_Mouse);
 		while (SDL_PollEvent(&g_even) != NULL)
-		{
+		{   
+			if (g_even.type == SDL_MOUSEBUTTONDOWN)
+				graphics.playSound(gChunk);
 			if (g_even.type == SDL_QUIT)
 			{
 				SDLCommonFunc::close();
@@ -121,7 +127,9 @@ void CallBG(SDL_Texture* Mouse, int mx, int my)
 		std::cerr << "BG error: " << SDL_GetError() << std::endl;
 	else {
 		
-
+		Mix_Chunk* gChunk = graphics.loadSound("CLICK_SOUND.wav");
+		if (gChunk == NULL) std::cerr << "Sound Error" << SDL_GetError() << std::endl;
+		
 		while (!clicked)
 		{   
 			SDL_RenderClear(renderer);
@@ -133,6 +141,8 @@ void CallBG(SDL_Texture* Mouse, int mx, int my)
 			SDL_RenderPresent(renderer);
 			while (SDL_PollEvent(&g_even) != NULL)
 			{    
+				if(g_even.type== SDL_MOUSEBUTTONDOWN)
+				 graphics.playSound(gChunk);
 				if (g_even.type == SDL_QUIT)
 				{
 					SDLCommonFunc::close();
@@ -174,6 +184,8 @@ void SongNote(Meow cat[]) {
 
 
 
+
+
 int main(int argc, char* args[]) {
 	bool is_quit = false;
 	if (init() == false)
@@ -185,9 +197,11 @@ int main(int argc, char* args[]) {
 	if (playMusic() == 0) {
 		std::cout << "Can't play music" << std::endl;
 	}
-	Graphics graphics;
+	
     Mix_Music* gMusic= graphics.loadMusic("SCARY_MUSIC.mp3");
 	if (gMusic == NULL) std::cerr << "Music Error"<<SDL_GetError()<<std::endl;
+	
+
 
 
 	bool first_click = false;
@@ -201,7 +215,7 @@ int main(int argc, char* args[]) {
 		else SDL_RenderCopy(renderer, backgr, NULL, NULL);
 		SDL_RenderPresent(renderer); 
 		while (SDL_PollEvent(&g_even) != NULL)
-		{
+		{   
 			if (g_even.type == SDL_QUIT)
 			{
 				SDLCommonFunc::close();
@@ -213,6 +227,9 @@ int main(int argc, char* args[]) {
 			}
 		}
 	}
+
+
+	
 	
 	if (first_click)
 	{
@@ -273,6 +290,7 @@ int main(int argc, char* args[]) {
 		std::cerr << "MOUSE pic unload!" << SDL_GetError() << std::endl;
 	int mx = 0, my = 0;
 	SDL_ShowCursor(0);
+
 	
 	while (!is_quit)
 	{
@@ -314,6 +332,8 @@ int main(int argc, char* args[]) {
 			else
 				character.SetSrcrect(1136, 0, 142, 288);
 			un_move = true;
+
+
 		}
 		while (call_bg == false) {
 			CallBG(Mouse, mx, my);

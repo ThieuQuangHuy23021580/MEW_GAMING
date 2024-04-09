@@ -12,6 +12,12 @@ public:
 
 	void closeMusic();
 
+	Mix_Chunk* loadSound(const char* path);
+
+	void playSound(Mix_Chunk* gChunk);
+
+
+
 };
 
 

@@ -23,6 +23,24 @@ void Graphics::play(Mix_Music* gMusic)
     }
 }
 
+//CLICK SOUND:
+Mix_Chunk* Graphics::loadSound(const char* path) {
+    Mix_Chunk* gChunk = Mix_LoadWAV(path);
+    if (gChunk == nullptr) {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+            SDL_LOG_PRIORITY_ERROR,
+            "Could not load CLICK sound! SDL_mixer Error: %s", Mix_GetError());
+    }
+    return gChunk;
+}
+void Graphics::playSound(Mix_Chunk* gChunk) {
+    if (gChunk != nullptr) {
+        Mix_PlayChannel(-1, gChunk, 0);
+    }
+}
+
+
+
 void Graphics::closeMusic()
 {
     Mix_Quit();
