@@ -15,7 +15,10 @@ public:
 	Mix_Chunk* loadSound(const char* path);
 
 	void playSound(Mix_Chunk* gChunk);
+    
+	TTF_Font* loadFont(const char* path, int size);
 
+	void* renderText(SDL_Renderer* renderer, std::string text, TTF_Font* font, SDL_Color textColor,int x, int y);
 
 
 };

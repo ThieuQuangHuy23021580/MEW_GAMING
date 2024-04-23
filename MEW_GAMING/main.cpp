@@ -37,7 +37,10 @@ bool init()
 		{
 			renderer = SDL_CreateRenderer(gWindow, -1, 0);
 		}
-		
+		if (TTF_Init() == -1)
+		{
+			std::cerr << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
+		}	
 	}
 	
 
@@ -56,15 +59,16 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 	
 	song1_played = false;
 	bool song_clicked = false;
+	int song_double_clicked = 0;
 	Mix_Chunk* gChunk = graphics.loadSound("CLICK_SOUND.wav");
 	if (gChunk == NULL) std::cerr << "Sound Error" << SDL_GetError() << std::endl;
-	while (!song_clicked&&!call_bg)
+	while (song_double_clicked<2&&!call_bg)
 	{   
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, background, NULL, NULL);
 		SDL_GetMouseState(&mx, &my);
 		//std::cerr << mx << " " << my << std::endl;
-		SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 50, 45);
+		SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 120, 123);
 
 		SDL_RenderPresent(renderer);
 		//SDL_DestroyTexture(Fake_Mouse);
@@ -87,7 +91,7 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 					SDL_RenderClear(renderer);
 					//Song1::Song1_BG(renderer);
 					song1_played = true;
-					song_clicked = true;
+					song_double_clicked++;
 					call_bg = true;
 				}
 				else if (mouseY_song > 460 && mouseY_song < 560)
@@ -95,7 +99,7 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 					SDL_RenderClear(renderer);
 					//Song1::Song1_BG(renderer);
 					song2_played = true;
-					song_clicked = true;
+					song_double_clicked++;
 					call_bg = true;
 				}
 				else if (mouseY_song > 590 && mouseY_song < 700) 
@@ -103,28 +107,93 @@ void ChooseSong(SDL_Texture* Mouse, int mx, int my,SDL_Texture* background) {
 					SDL_RenderClear(renderer);
 					//Song1::Song1_BG(renderer);
 					song3_played = true;
-					song_clicked = true;
+					song_double_clicked++;
 					call_bg = true;
 				}
 				else if (mouseY_song < 100&&mouseY_song>0 && mouseX_song < 100&&mouseX_song >0)
 				{
 					call_bg = false;
-					song_clicked = true;
+					song_double_clicked++;
 				}
 			}
 		}
 	}
 }
+void Menu(SDL_Texture* Mouse,SDL_Texture* background)
+{   
+	Mix_Chunk* gChunk = graphics.loadSound("CLICK_SOUND.wav");
+	if (gChunk == NULL) std::cerr << "Sound Error" << SDL_GetError() << std::endl;
+	bool menu_clicked = false;
+	SDL_Texture* menu_1 = SDLCommonFunc::loadTexture("FOOD_MENU_1.png", renderer);
+	SDL_Texture* menu_2 = SDLCommonFunc::loadTexture("FOOD_MENU_2.png", renderer);
+	int mx, my;
+	SDL_Rect menu_Rect = { 277,690,1,1 };
 
-void CallBG(SDL_Texture* Mouse, int mx, int my) 
+	
+	
+
+	while (!menu_clicked)
+	{   
+		SDL_RenderClear(renderer);
+		SDL_GetMouseState(&mx, &my);
+		SDL_RenderCopy(renderer, background, NULL, NULL);
+		SDL_RenderCopy(renderer, menu_1, NULL, &menu_Rect);
+		
+			if(menu_Rect.x > 0 )menu_Rect.x--;
+			if(menu_Rect.y > 0)menu_Rect.y--;
+			if(menu_Rect.w < 529)menu_Rect.w++;
+			if(menu_Rect.h < 748)menu_Rect.h++;
+		
+		std::cout << mx << "," << my << std::endl;
+		SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 120, 123);
+		SDL_RenderPresent(renderer);
+		call_bg = true;
+		while (SDL_PollEvent(&g_even) != NULL)
+		{
+			if (g_even.type == SDL_MOUSEBUTTONDOWN)
+				graphics.playSound(gChunk);
+			if (g_even.type == SDL_QUIT)
+			{
+				SDLCommonFunc::close();
+			}
+			else if (g_even.type == SDL_MOUSEBUTTONDOWN && g_even.button.button == SDL_BUTTON_LEFT)
+			{
+				if (mx > 200 && mx < 347 && my>565 && my < 615) 
+				{ 
+					menu_clicked = true;
+				
+				}
+			}
+		}
+	}
+}
+void CallBG(SDL_Texture* Mouse, int &mx, int &my) 
 {   
 	
 	
 	bool clicked = false;
-	SDL_Texture* background = NULL;
-	background = SDLCommonFunc::loadTexture("openBackground.png", renderer);
-	if (background == NULL) 
+	SDL_Texture* background1 = NULL;
+	SDL_Texture* background2 = NULL;
+	SDL_Texture* background3 = NULL;
+
+	background1 = SDLCommonFunc::loadTexture("bg1.png", renderer);
+	background2 = SDLCommonFunc::loadTexture("bg2.png", renderer);
+	background3 = SDLCommonFunc::loadTexture("bg3.png", renderer);
+	if (background1 == NULL||background2==NULL) 
 		std::cerr << "BG error: " << SDL_GetError() << std::endl;
+	SDL_Texture* Start1 = NULL;
+	Start1 = SDLCommonFunc::loadTexture("START_BUTTON_1.png", renderer);
+	SDL_Texture* Start2 = NULL;
+	Start2 = SDLCommonFunc::loadTexture("START_BUTTON_2.png", renderer);
+	SDL_Rect S1_Rect = { 180,450,181,182};
+	SDL_Rect S2_Rect = { 180,450,181,182 };
+	SDL_Texture* char_button = SDLCommonFunc::loadTexture("CHAR_BUTTON.png", renderer);
+	SDL_Rect d_char = { 225,640, 96, 92 };
+	SDL_Rect s1_char = { 0,0,191,184 };
+	SDL_Rect s2_char = { 200,0,191,184 };
+	
+	if (Start1 == NULL||Start2==NULL)
+		std::cerr << "Start error" << SDL_GetError() << std::endl;
 	else {
 		
 		Mix_Chunk* gChunk = graphics.loadSound("CLICK_SOUND.wav");
@@ -133,11 +202,32 @@ void CallBG(SDL_Texture* Mouse, int mx, int my)
 		while (!clicked)
 		{   
 			SDL_RenderClear(renderer);
-			SDL_RenderCopy(renderer, background, NULL, NULL);
+			
+			
 			
 			SDL_GetMouseState(&mx, &my);
-			//std::cerr << mx << " " << my << std::endl;
-			SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 50, 45);
+			std::cout << mx << "," << my <<std:: endl;
+			if (mx > 235 && mx < 320 && my>650 && my < 730)
+			{
+				SDL_RenderCopy(renderer, background2, NULL, NULL);
+				SDL_RenderCopy(renderer, Start1, NULL, &S1_Rect);
+				SDL_RenderCopy(renderer, char_button, &s2_char, &d_char);
+			}
+			else if (mx>190&&mx<360&&my>460&&my<630) {
+				SDL_RenderCopy(renderer, background2, NULL, NULL);
+				SDL_RenderCopy(renderer, Start2, NULL, &S2_Rect);
+				SDL_RenderCopy(renderer, char_button, &s1_char, &d_char);
+				
+			
+			}
+			else
+			{
+				SDL_RenderCopy(renderer, background1, NULL, NULL);
+				SDL_RenderCopy(renderer, Start1, NULL, &S1_Rect);
+				SDL_RenderCopy(renderer, char_button, &s1_char, &d_char);
+				
+			}
+			SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 120, 123);
 			SDL_RenderPresent(renderer);
 			while (SDL_PollEvent(&g_even) != NULL)
 			{    
@@ -151,18 +241,24 @@ void CallBG(SDL_Texture* Mouse, int mx, int my)
 				{
 					int mouseX, mouseY;
 					SDL_GetMouseState(&mouseX, &mouseY);
-					if (mouseX > 200 && mouseX < 300 && mouseY>550 && mouseY < 650)
+					if (mouseX > 190 && mouseX < 360 && mouseY>460 && mouseY < 630)
 					{
 						SDL_Delay(700);
 						SDL_RenderClear(renderer);
-						background = SDLCommonFunc::loadTexture("PLAYLIST_BG.png", renderer);
-						SDL_RenderCopy(renderer, background, NULL, NULL);
+						background1 = SDLCommonFunc::loadTexture("PLAYLIST_BG.png", renderer);
+						SDL_RenderCopy(renderer, background1, NULL, NULL);
 						SDL_RenderPresent(renderer);
 
 						//Choose song:
-						ChooseSong(Mouse,mx,my,background);
+						ChooseSong(Mouse,mx,my,background1);
 
 						clicked = true;
+
+					}
+					else if (mouseX > 235 && mouseX < 320 && mouseY>650 && mouseY < 730)
+					{
+						
+						Menu(Mouse,background3);
 
 					}
 				}
@@ -204,7 +300,7 @@ int main(int argc, char* args[]) {
 
 
 
-	bool first_click = false;
+	/*bool first_click = false;
 	while (!first_click)
 	{
 		graphics.play(gMusic);
@@ -241,7 +337,7 @@ int main(int argc, char* args[]) {
 		else SDL_RenderCopy(renderer, backgr2, NULL, NULL);
 		SDL_RenderPresent(renderer);
 		SDL_Delay(500);
-	}
+	}*/
 	gMusic = graphics.loadMusic("MAIN_MUSIC.mp3");
 	
 	
@@ -285,11 +381,18 @@ int main(int argc, char* args[]) {
 	int sprite_plus[16] = { 0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16 };
 	int i = 35, j = 45;
 	SDL_Texture* Mouse = NULL;
-	Mouse = SDLCommonFunc::loadTexture("MOUSE.png", renderer);
+	Mouse = SDLCommonFunc::loadTexture("MOUSE_3.png", renderer);
 	if (Mouse == NULL) 
 		std::cerr << "MOUSE pic unload!" << SDL_GetError() << std::endl;
 	int mx = 0, my = 0;
 	SDL_ShowCursor(0);
+
+	//POINT :
+	int plus = 0;
+	TTF_Font* font = graphics.loadFont("SpeedRush.ttf", 50);
+	SDL_Color color = { 255, 255, 0, 255 };
+	std::string point = "Score: ";
+	
 
 	
 	while (!is_quit)
@@ -347,22 +450,34 @@ int main(int argc, char* args[]) {
 		else if (song2_played == true) SDL_RenderCopy(renderer, song2_bg, NULL, NULL);
 		else if (song3_played == true) SDL_RenderCopy(renderer, song3_bg, NULL, NULL);
 
+		//POINT: 
+		point = "Score: " + std::to_string(plus);
+	    graphics.renderText(renderer, point, font, color, 10, 10);
+		
+		
+
+
 		/*SDL_GetMouseState(&mx, &my);
 		std::cerr << mx << " " << my << std::endl;
 		SDLCommonFunc::renderTexture(Mouse, renderer, mx - 25, my - 25, 50, 45);*/
-
+		
 		//SongNote(cat);
 		cat[0].HandleMove();
+		cat[0].showObject(renderer, 0);
+
 		int bottom_x = cat->GetRect().x + WIDTH_MEOW / 2;
 		if (character.GetRect().x < bottom_x && character.GetRect().x + WIDTH_MAIN >bottom_x && character.GetRect().y - HEIGHT_MAIN / 10 == cat->GetRect().y)
+		{
 			cat[0].SetLose(true);
+			plus++;
+		}
 		if (cat[0].GetRect().y == SCREEN_HEIGHT - 200)
 		{
 			MessageBox(NULL, L"Thua roi liu liu :>", L"HUY said:", MB_OK); /* == IDOK */
 			SDL_Delay(100);
 			call_bg = false;
 		}
-		cat[0].showObject(renderer, 0);
+		
 
 
 		/*cat[1].HandleMove();

@@ -39,6 +39,43 @@ void Graphics::playSound(Mix_Chunk* gChunk) {
     }
 }
 
+TTF_Font* Graphics::loadFont(const char* path, int size)
+{
+    TTF_Font* gFont = TTF_OpenFont(path, size);
+    if (gFont == nullptr)
+    {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, "Load font %s", TTF_GetError());
+    }
+    return gFont;
+}
+
+
+void* Graphics::renderText(SDL_Renderer* renderer,std::string  text, TTF_Font* font, SDL_Color textColor,int x, int y)
+{
+    SDL_Surface* textSurface =
+        TTF_RenderText_Solid(font, text.c_str(), textColor);
+    if (textSurface == nullptr) {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+            SDL_LOG_PRIORITY_ERROR,
+            "Render text surface %s", TTF_GetError());
+        return nullptr;
+    }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (texture == nullptr) {
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+            SDL_LOG_PRIORITY_ERROR,
+            "Create texture from text %s", SDL_GetError());
+    }
+    int texW = 0;
+    int texH = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+    SDL_Rect dstRect = { x, y, texW, texH };
+    SDL_RenderCopy(renderer, texture, NULL, &dstRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(texture);
+
+
+}
 
 
 void Graphics::closeMusic()
