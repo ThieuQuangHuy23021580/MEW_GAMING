@@ -12,8 +12,6 @@ SDL_Texture* SDLCommonFunc::loadTexture(std::string file_path,SDL_Renderer* rend
 	texture = SDL_CreateTextureFromSurface(renderer, load_image);
 	if (texture == NULL) 
 		std::cerr << "LoadTexture is wrong!" << SDL_GetError() << std::endl;
-	//SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	//SDL_SetTextureColorMod(texture, 0, 255, 255);
 	SDL_FreeSurface(load_image);
 	return texture;
 }
@@ -34,7 +32,6 @@ void SDLCommonFunc::renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, 
 	offset.y = y;
 	offset.w = w;
 	offset.h = h;
-
 	SDL_RenderCopy(renderer, texture, &srcrect , &offset);
 }
 void SDLCommonFunc::close()
@@ -44,12 +41,4 @@ void SDLCommonFunc::close()
 	SDL_Quit();
 	TTF_Quit();
 	Mix_Quit();
-}
-bool SDLCommonFunc::is_Interact(SDL_Rect character, const int width_char, const int height_char, SDL_Rect cat, const int width_cat, const int height_cat)
-{   
-	int bottom_x = cat.x + width_cat / 2;
-	if (character.x < bottom_x && character.x + width_char >bottom_x && character.y - height_char == cat.y)
-		return true;
-	return false;
-
 }

@@ -2,13 +2,10 @@
 
 MainObject::MainObject()
 {
-	rect_.x = 180;
-	rect_.y = 500;
-	rect_.w = WIDTH_MAIN/1.2;
-	rect_.h = HEIGHT_MAIN/1.2;
-
-	objectTexture = NULL;
-	
+	rect_.x = 190;
+	rect_.y = 600;
+	rect_.w = WIDTH_MAIN/2.5;
+	rect_.h = HEIGHT_MAIN/2.5;
 }
 MainObject::~MainObject()
 {
@@ -24,34 +21,19 @@ void MainObject::HandleInputAction(SDL_Event events)
 		{
 		case SDLK_LEFT:
 			if(rect_.x>0)
-			rect_.x -= WIDTH_MAIN /27;
+			rect_.x -= WIDTH_MAIN /20;
 			break;
 		case SDLK_RIGHT:
-			if((rect_.x+WIDTH_MAIN)<SCREEN_WIDTH)
-			rect_.x += WIDTH_MAIN / 27;
+			if((rect_.x+rect_.w)<SCREEN_WIDTH)
+			rect_.x += WIDTH_MAIN / 20;
 			break;
 		}
 	}
-	/*if (events.type == SDL_KEYUP)
-	{
-
-		switch (events.key.keysym.sym)
-		{
-		case SDLK_LEFT:
-			if (rect_.x > 0)
-				rect_.x += WIDTH_MAIN / 30;
-			break;
-		case SDLK_RIGHT:
-			if ((rect_.x + WIDTH_MAIN) < SCREEN_WIDTH)
-				rect_.x -= WIDTH_MAIN / 30;
-			break;
-		}
-		
-	}*/
-	
-	
-	
 }
-
+void MainObject::StartState()
+{
+	rect_.x = 190;
+	rect_.y = 600;
+}
 
 

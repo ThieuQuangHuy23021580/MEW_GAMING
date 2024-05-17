@@ -10,7 +10,7 @@
 #include<SDL_mixer.h>
 
 
-const int SCREEN_WIDTH = 529;
+const int SCREEN_WIDTH = 528;
 const int SCREEN_HEIGHT = 748;
 
 static SDL_Window* gWindow = NULL;
@@ -24,7 +24,6 @@ namespace SDLCommonFunc
 	SDL_Texture* loadTexture(std::string file_path,SDL_Renderer* renderer);
 	void renderTexture(SDL_Texture* texture,SDL_Renderer*  renderer, int x, int y, int w, int h);
 	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h, SDL_Rect& srcrect );
-	bool is_Interact(SDL_Rect character, const int width_char, const int height_char, SDL_Rect cat, const int width_cat, const int height_cat);
 	void close();
 }
 

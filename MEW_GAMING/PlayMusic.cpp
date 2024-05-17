@@ -22,6 +22,15 @@ void Graphics::play(Mix_Music* gMusic)
         Mix_ResumeMusic();
     }
 }
+void Graphics::playSong(Mix_Music* gMusic)
+{
+    if (gMusic == nullptr) return;
+
+    if (Mix_PlayingMusic() == 0) {
+        Mix_PlayMusic(gMusic, 0);
+    }
+    Mix_VolumeMusic(MIX_MAX_VOLUME);
+}
 
 //CLICK SOUND:
 Mix_Chunk* Graphics::loadSound(const char* path) {
@@ -52,16 +61,13 @@ TTF_Font* Graphics::loadFont(const char* path, int size)
 
 void* Graphics::renderText(SDL_Renderer* renderer,std::string  text, TTF_Font* font, SDL_Color textColor,int x, int y)
 {
-    SDL_Surface* textSurface =
-        TTF_RenderText_Solid(font, text.c_str(), textColor);
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     if (textSurface == nullptr) {
-        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
-            SDL_LOG_PRIORITY_ERROR,
-            "Render text surface %s", TTF_GetError());
+        SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,"Render text surface %s", TTF_GetError());
         return nullptr;
     }
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    if (texture == nullptr) {
+    if (texture             == nullptr) {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
             SDL_LOG_PRIORITY_ERROR,
             "Create texture from text %s", SDL_GetError());

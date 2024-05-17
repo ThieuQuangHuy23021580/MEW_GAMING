@@ -2,8 +2,8 @@
 #define MAINOBJECT_H_
 #include"BaseObject.h"
 
-const int WIDTH_MAIN = 142;
-const int HEIGHT_MAIN = 288;
+const int WIDTH_MAIN = 157;
+const int HEIGHT_MAIN = 185;
 
 class MainObject : public BaseObject
 {
@@ -12,6 +12,7 @@ public:
   ~MainObject();
 
   void HandleInputAction(SDL_Event events);
+  void StartState();
  
 };
 

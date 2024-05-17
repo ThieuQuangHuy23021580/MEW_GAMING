@@ -12,6 +12,8 @@ public:
 
 	void closeMusic();
 
+	void playSong(Mix_Music* gMusic);
+
 	Mix_Chunk* loadSound(const char* path);
 
 	void playSound(Mix_Chunk* gChunk);
